@@ -16,7 +16,7 @@ function App() {
         <Route path="/" exact>
           <Redirect to={`/documents/${v4()}`} />
         </Route>
-        <Route path="/documents/:id">
+        <Route path="/documents/:slug">
           <TextEditor user={user} />
         </Route>
       </Switch>

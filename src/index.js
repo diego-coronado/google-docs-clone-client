@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import ActionCableProvider from "./utils/action-cable";
+require("dotenv").config();
 
 ReactDOM.render(
   <React.StrictMode>

@@ -19,7 +19,7 @@ const TOOLBAR_OPTIONS = [
   [{ font: [] }],
   [{ list: "ordered" }, { list: "bullet" }],
   ["bold", "italic", "underline"],
-  ['blockquote', 'code-block'],
+  ["blockquote", "code-block"],
   [{ color: [] }, { background: [] }],
   [{ script: "sub" }, { script: "super" }],
   [{ align: [] }],
@@ -28,10 +28,12 @@ const TOOLBAR_OPTIONS = [
 ];
 
 export default function TextEditor({ user }) {
-  const { id: documentId } = useParams();
+  const { slug: documentSlug } = useParams();
   const [quill, setQuill] = useState();
   const { consumer } = useContext(ActionCableContext);
   const wrapperRef = useRef(null);
+  console.log(process.env.REACT_APP_API_HOST);
+  console.log(process.cwd());
 
   const textChangeHandler = useCallback(
     (delta, oldDelta, source) => {
@@ -83,16 +85,20 @@ export default function TextEditor({ user }) {
 
     const interval = setInterval(() => {
       const data = quill.getContents();
-      fetch(`http://localhost:5000/documents/${documentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: documentId,
-          data: JSON.stringify(data),
-        }),
-      });
+      fetch(
+        `${process.env.REACT_APP_API_HOST}/documents/${documentSlug}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+            slug: documentSlug,
+            data: JSON.stringify(data),
+          }),
+        }
+      );
     }, 10000);
 
     return () => {
@@ -114,7 +120,7 @@ export default function TextEditor({ user }) {
     <DocumentsChannelSubscriber
       connection={{
         channel: "DocumentsChannel",
-        document: documentId,
+        document: documentSlug,
         user,
       }}
       onChanged={onChanged}
