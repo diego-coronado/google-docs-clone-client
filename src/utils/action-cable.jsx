@@ -30,7 +30,7 @@ export default function ActionCableProvider({ children }) {
   const [consumer, setConsumer] = useState();
 
   useEffect(() => {
-    setConsumer(actionCable.createConsumer(`${process.env.REACT_APP_API_WS_HOST}/cable`));
+    setConsumer(actionCable.createConsumer(`${process.env.REACT_APP_API_WS_HOST}`));
     return () => {
       if (consumer) consumer.disconnect();
     };
